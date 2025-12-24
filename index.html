@@ -10,11 +10,11 @@
 
         :root {
             --gold: #d4af37;
-            --red: #d4af37;
             --night-black: #000000;
         }
-        .green{
-            color:limegreen;
+
+        .green {
+            color: limegreen;
             text-decoration: none;
             font-style: italic;
             font-weight: bold;
@@ -31,6 +31,20 @@
             overflow: hidden;
         }
 
+        #bg-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: 0;
+            transform: translate(-50%, -50%);
+            opacity: 0.15;
+            object-fit: cover;
+        }
+
         #canvas-bg {
             position: absolute;
             top: 0;
@@ -38,6 +52,7 @@
             width: 100%;
             height: 100%;
             z-index: 1;
+            pointer-events: none;
         }
 
         .main-ui {
@@ -49,8 +64,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* Changed to pure black gradient */
-            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.9) 100%);
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
         }
 
         .header {
@@ -132,16 +146,31 @@
             padding: 6px;
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(8px);
-            transform: rotate(var(--r));
-            animation: drift 10s ease-in-out infinite alternate;
-            opacity: 0.7;
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
             z-index: 5;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
         }
 
+        /* Explosion entrance logic */
+        .fragment.exploded {
+            opacity: 0.7;
+            pointer-events: auto;
+        }
+
+        .f1 { top: 15%; left: 3%; transform: scale(0) rotate(-20deg); }
+        .f2 { bottom: 8%; left: 5%; transform: scale(0) rotate(15deg); }
+        .f3 { top: 15%; right: 3%; transform: scale(0) rotate(20deg); }
+        .f4 { bottom: 8%; right: 5%; transform: scale(0) rotate(-15deg); }
+
+        .f1.exploded { transform: scale(1) rotate(-10deg); }
+        .f2.exploded { transform: scale(1) rotate(6deg); }
+        .f3.exploded { transform: scale(1) rotate(12deg); }
+        .f4.exploded { transform: scale(1) rotate(-8deg); }
+
         .fragment:hover {
-            opacity: 1;
+            opacity: 1 !important;
             transform: scale(1.15) rotate(0deg) translateZ(100px) !important;
             z-index: 50;
             border-color: var(--gold);
@@ -154,16 +183,6 @@
             object-fit: cover;
             border-radius: 4px;
         }
-
-        @keyframes drift {
-            from { transform: rotate(var(--r)) translateY(0); }
-            to { transform: rotate(var(--r)) translateY(-25px); }
-        }
-
-        .f1 { top: 15%; left: 3%; --r: -10deg; }
-        .f2 { bottom: 8%; left: 5%; --r: 6deg; }
-        .f3 { top: 15%; right: 3%; --r: 12deg; }
-        .f4 { bottom: 8%; right: 5%; --r: -8deg; }
 
         .cursor {
             display: inline-block;
@@ -190,22 +209,20 @@
 
         .btn-start {
             padding: 1.2rem 3rem;
-            background: var(--red);
-            color: white;
+            background: var(--gold);
+            color: black;
             border: none;
             border-radius: 10px;
             font-size: 1.4rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
             transition: 0.3s;
         }
-        .btn-start:hover { transform: scale(1.1); background: gold; }
+        .btn-start:hover { transform: scale(1.1); filter: brightness(1.2); }
 
         @media (max-width: 768px) {
-            .fragment {
-                width: 130px;
-            }
+            .fragment { width: 130px; }
             .f1 { top: 18%; left: 2%; }
             .f3 { top: 18%; right: 2%; }
             .f2 { bottom: 5%; left: 2%; }
@@ -215,10 +232,15 @@
 </head>
 <body>
 
+    <!-- Background Video -->
+    <video id="bg-video" autoplay loop muted playsinline>
+        <source src="media/WhatsApp Video 2025-12-24 at 22.10.58.mp4" type="video/mp4">
+    </video>
+
     <div id="start-overlay">
-        <audio src="media/myaudio.mp3" id="myAudio"></audio>
+        <audio src="media/myaudio.mp3" id="myAudio" loop></audio>
         <button class="btn-start" id="playButton" onclick="startApp()">Enter 2026</button>
-        <h3>Developed by <a href="https://tristechhub.org.rw" class="green">Tris Tech Hub</a></h3>
+        <h3 class="mt-6">Developed by <a href="https://tristechhub.org.rw" class="green">Tris Tech Hub</a></h3>
     </div>
 
     <canvas id="canvas-bg"></canvas>
@@ -229,6 +251,7 @@
             <span class="year-badge">2026</span>
         </header>
 
+        <!-- Original 4 Image Fragments -->
         <div class="fragment f1"><img src="media/elvira.jpeg" alt="Memory"></div>
         <div class="fragment f2"><img src="media/elvira3.jpeg" alt="Memory"></div>
         <div class="fragment f3"><img src="media/elvira2.jpeg" alt="Memory"></div>
@@ -243,11 +266,6 @@
     </div>
 
     <script>
-
-        
-
-
-
         const bgCanvas = document.getElementById('canvas-bg');
         const bgCtx = bgCanvas.getContext('2d');
         const heartCanvas = document.getElementById('heart-canvas');
@@ -269,7 +287,7 @@
 
         function initStars() {
             stars = [];
-            for(let i=0; i<400; i++) {
+            for(let i=0; i<350; i++) {
                 stars.push({
                     x: Math.random() * width - width/2,
                     y: Math.random() * height - height/2,
@@ -281,21 +299,19 @@
 
         function initSnow() {
             snowflakes = [];
-            for(let i=0; i<150; i++) {
+            for(let i=0; i<120; i++) {
                 snowflakes.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
                     r: Math.random() * 2 + 1,
                     d: Math.random() * 1,
-                    s: Math.random() * 1 + 0.5
+                    s: Math.random() * 0.7 + 0.3
                 });
             }
         }
 
         function drawScene() {
-            // Pure black background
-            bgCtx.fillStyle = '#000000';
-            bgCtx.fillRect(0, 0, width, height);
+            bgCtx.clearRect(0, 0, width, height);
             
             // Draw Stars
             bgCtx.save();
@@ -314,16 +330,14 @@
             bgCtx.restore();
 
             // Draw Snow
-            bgCtx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            bgCtx.fillStyle = "rgba(255, 255, 255, 0.6)";
             bgCtx.beginPath();
             for(let i = 0; i < snowflakes.length; i++) {
                 let p = snowflakes[i];
                 bgCtx.moveTo(p.x, p.y);
                 bgCtx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
-                
-                // Update snowfall
                 p.y += p.s;
-                p.x += Math.sin(p.d) * 0.5;
+                p.x += Math.sin(p.d) * 0.4;
                 if(p.y > height) {
                     snowflakes[i] = {x: Math.random() * width, y: -10, r: p.r, d: p.d, s: p.s};
                 }
@@ -351,7 +365,7 @@
 
             let pulse = 1;
             if (heartProgress >= 1) {
-                pulse = 1 + 0.025 * Math.sin(Date.now() / 500);
+                pulse = 1 + 0.02 * Math.sin(Date.now() / 600);
                 heartCtx.scale(pulse, pulse);
                 poemDisplay.style.transform = `scale(${pulse})`;
             }
@@ -368,12 +382,10 @@
             heartCtx.strokeStyle = '#ff1a1a';
             heartCtx.lineWidth = 3;
             heartCtx.shadowColor = '#ff1a1a';
-            heartCtx.shadowBlur = 25;
+            heartCtx.shadowBlur = 20;
             heartCtx.stroke();
-            
-            heartCtx.fillStyle = 'rgba(255, 0, 0, 0.05)';
+            heartCtx.fillStyle = 'rgba(255, 0, 0, 0.03)';
             heartCtx.fill();
-            
             heartCtx.restore();
 
             if (heartProgress < 1) {
@@ -384,7 +396,7 @@
             }
         }
 
-        const poem = [
+        const poemLines = [
             "In every heartbeat of this year,",
             "I'll keep you close and hold you dear.",
             "As 2026 starts to unfold,",
@@ -396,11 +408,11 @@
 
         let charIdx = 0;
         function type() {
-            if (charIdx < poem.length) {
-                if (poem[charIdx] === '\n') {
+            if (charIdx < poemLines.length) {
+                if (poemLines[charIdx] === '\n') {
                     poemDisplay.innerHTML += '<br>';
                 } else {
-                    poemDisplay.innerHTML += poem[charIdx];
+                    poemDisplay.innerHTML += poemLines[charIdx];
                 }
                 charIdx++;
                 setTimeout(type, 70);
@@ -410,11 +422,18 @@
         }
 
         function startApp() {
-            document.getElementById('start-overlay').style.opacity = '0';
+            const overlay = document.getElementById('start-overlay');
+            overlay.style.opacity = '0';
             const audio = document.getElementById("myAudio");
-            audio.play();
+            audio.play().catch(e => console.log("Audio blocked"));
+
+            // Image explosion entrance
+            document.querySelectorAll('.fragment').forEach((f, i) => {
+                setTimeout(() => f.classList.add('exploded'), 200 + (i * 200));
+            });
+
             setTimeout(() => {
-                document.getElementById('start-overlay').style.display = 'none';
+                overlay.style.display = 'none';
                 animateHeart();
                 setTimeout(type, 1200);
             }, 1000);
@@ -423,9 +442,6 @@
         window.addEventListener('resize', resize);
         resize();
         drawScene();
-        
-
-        
     </script>
 </body>
 </html>
