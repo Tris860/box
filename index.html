@@ -10,7 +10,7 @@
 
         :root {
             --gold: #d4af37;
-            --red: #ff1a1a;
+            --red: #d4af37;
             --night-black: #000000;
         }
         .green{
@@ -193,14 +193,14 @@
             background: var(--red);
             color: white;
             border: none;
-            border-radius: 50px;
+            border-radius: 10px;
             font-size: 1.4rem;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
             transition: 0.3s;
         }
-        .btn-start:hover { transform: scale(1.1); background: #ff0000; }
+        .btn-start:hover { transform: scale(1.1); background: gold; }
 
         @media (max-width: 768px) {
             .fragment {
@@ -216,7 +216,7 @@
 <body>
 
     <div id="start-overlay">
-        <audio src="media/Sia - Snowman [Official Video] [gset79KMmt0].mp3" id="myAudio"></audio>
+        <audio src="media/myaudio.mp3" id="myAudio"></audio>
         <button class="btn-start" id="playButton" onclick="startApp()">Enter 2026</button>
         <h3>Developed by <a href="https://tristechhub.org.rw" class="green">Tris Tech Hub</a></h3>
     </div>
@@ -424,17 +424,6 @@
         resize();
         drawScene();
         
-        // Get a reference to the audio element in the HTML
-        const sound = document.getElementById('mySound');
-
-       // Get a reference to the button element
-       const button = document.getElementById('playButton');
-
-     // Add an event listener to the button
-      button.addEventListener('click', function() {
-    // Check if the audio is currently playing and reset it to the beginning
-      
-});
 
         
     </script>
