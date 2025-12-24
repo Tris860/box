@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy New Year 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,400;1,700&family=Great+Vibes&display=swap');
+
+        :root {
+            --gold: #d4af37;
+            --red: #ff1a1a;
+            --night-black: #000000;
+        }
+        .green{
+            color:limegreen;
+            text-decoration: none;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--night-black);
+            color: white;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+
+        #canvas-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .main-ui {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Changed to pure black gradient */
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.9) 100%);
+        }
+
+        .header {
+            position: absolute;
+            top: 4%;
+            text-align: center;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .ny-title {
+            font-family: 'Bodoni Moda', serif;
+            font-style: italic;
+            font-size: clamp(1.8rem, 8vw, 3.5rem);
+            background: linear-gradient(to bottom, #fff 20%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            margin: 0;
+        }
+
+        .year-badge {
+            font-size: clamp(0.8rem, 3.5vw, 1.2rem);
+            letter-spacing: 0.5em;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-top: 0.4rem;
+            display: block;
+        }
+
+        .heart-container {
+            position: relative;
+            width: min(85vw, 550px);
+            aspect-ratio: 1/1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            perspective: 1200px;
+        }
+
+        #heart-canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 21;
+        }
+
+        .text-safe-zone {
+            position: absolute;
+            width: 70%;
+            height: 50%;
+            top: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            pointer-events: none;
+            z-index: 30;
+            transform: translateZ(60px);
+        }
+
+        .poem-display {
+            font-family: 'Great Vibes', cursive;
+            color: #ffffff;
+            line-height: 1.35;
+            font-size: clamp(1.2rem, 5vw, 2.2rem);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 5px 15px rgba(0, 0, 0, 0.9);
+            width: 100%;
+            white-space: pre-wrap;
+        }
+
+        .fragment {
+            position: absolute;
+            width: clamp(140px, 25vw, 240px);
+            aspect-ratio: 4/5;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            transform: rotate(var(--r));
+            animation: drift 10s ease-in-out infinite alternate;
+            opacity: 0.7;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 5;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .fragment:hover {
+            opacity: 1;
+            transform: scale(1.15) rotate(0deg) translateZ(100px) !important;
+            z-index: 50;
+            border-color: var(--gold);
+            box-shadow: 0 20px 50px rgba(212, 175, 55, 0.4);
+        }
+
+        .fragment img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        @keyframes drift {
+            from { transform: rotate(var(--r)) translateY(0); }
+            to { transform: rotate(var(--r)) translateY(-25px); }
+        }
+
+        .f1 { top: 15%; left: 3%; --r: -10deg; }
+        .f2 { bottom: 8%; left: 5%; --r: 6deg; }
+        .f3 { top: 15%; right: 3%; --r: 12deg; }
+        .f4 { bottom: 8%; right: 5%; --r: -8deg; }
+
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background: var(--gold);
+            margin-left: 2px;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        #start-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--night-black);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease;
+        }
+
+        .btn-start {
+            padding: 1.2rem 3rem;
+            background: var(--red);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            transition: 0.3s;
+        }
+        .btn-start:hover { transform: scale(1.1); background: #ff0000; }
+
+        @media (max-width: 768px) {
+            .fragment {
+                width: 130px;
+            }
+            .f1 { top: 18%; left: 2%; }
+            .f3 { top: 18%; right: 2%; }
+            .f2 { bottom: 5%; left: 2%; }
+            .f4 { bottom: 5%; right: 2%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="start-overlay">
+        <audio src="media/Sia - Snowman [Official Video] [gset79KMmt0].mp3" id="myAudio"></audio>
+        <button class="btn-start" id="playButton" onclick="startApp()">Enter 2026</button>
+        <h3>Developed by <a href="https://tristechhub.org.rw" class="green">Tris Tech Hub</a></h3>
+    </div>
+
+    <canvas id="canvas-bg"></canvas>
+
+    <div class="main-ui">
+        <header class="header">
+            <h1 class="ny-title">Happy New Year, My Love</h1>
+            <span class="year-badge">2026</span>
+        </header>
+
+        <div class="fragment f1"><img src="media/elvira.jpeg" alt="Memory"></div>
+        <div class="fragment f2"><img src="media/elvira3.jpeg" alt="Memory"></div>
+        <div class="fragment f3"><img src="media/elvira2.jpeg" alt="Memory"></div>
+        <div class="fragment f4"><img src="media/elvira4.jpeg" alt="Memory"></div>
+
+        <div class="heart-container">
+            <canvas id="heart-canvas"></canvas>
+            <div class="text-safe-zone">
+                <div id="poem-target" class="poem-display"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        
+
+
+
+        const bgCanvas = document.getElementById('canvas-bg');
+        const bgCtx = bgCanvas.getContext('2d');
+        const heartCanvas = document.getElementById('heart-canvas');
+        const heartCtx = heartCanvas.getContext('2d');
+        const poemDisplay = document.getElementById('poem-target');
+        
+        let stars = [];
+        let snowflakes = [];
+        let heartPoints = [];
+        let width, height;
+
+        function resize() {
+            width = bgCanvas.width = heartCanvas.width = window.innerWidth;
+            height = bgCanvas.height = heartCanvas.height = window.innerHeight;
+            initStars();
+            initSnow();
+            initHeart();
+        }
+
+        function initStars() {
+            stars = [];
+            for(let i=0; i<400; i++) {
+                stars.push({
+                    x: Math.random() * width - width/2,
+                    y: Math.random() * height - height/2,
+                    z: Math.random() * width,
+                    o: Math.random()
+                });
+            }
+        }
+
+        function initSnow() {
+            snowflakes = [];
+            for(let i=0; i<150; i++) {
+                snowflakes.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    r: Math.random() * 2 + 1,
+                    d: Math.random() * 1,
+                    s: Math.random() * 1 + 0.5
+                });
+            }
+        }
+
+        function drawScene() {
+            // Pure black background
+            bgCtx.fillStyle = '#000000';
+            bgCtx.fillRect(0, 0, width, height);
+            
+            // Draw Stars
+            bgCtx.save();
+            bgCtx.translate(width/2, height/2);
+            stars.forEach(s => {
+                s.z -= 0.5;
+                if(s.z <= 0) s.z = width;
+                let sx = s.x * (width / s.z);
+                let sy = s.y * (width / s.z);
+                let size = (1 - s.z / width) * 2;
+                bgCtx.fillStyle = `rgba(255, 255, 255, ${s.o * (1 - s.z / width)})`;
+                bgCtx.beginPath();
+                bgCtx.arc(sx, sy, size, 0, Math.PI*2);
+                bgCtx.fill();
+            });
+            bgCtx.restore();
+
+            // Draw Snow
+            bgCtx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            bgCtx.beginPath();
+            for(let i = 0; i < snowflakes.length; i++) {
+                let p = snowflakes[i];
+                bgCtx.moveTo(p.x, p.y);
+                bgCtx.arc(p.x, p.y, p.r, 0, Math.PI*2, true);
+                
+                // Update snowfall
+                p.y += p.s;
+                p.x += Math.sin(p.d) * 0.5;
+                if(p.y > height) {
+                    snowflakes[i] = {x: Math.random() * width, y: -10, r: p.r, d: p.d, s: p.s};
+                }
+            }
+            bgCtx.fill();
+
+            requestAnimationFrame(drawScene);
+        }
+
+        function initHeart() {
+            heartPoints = [];
+            const scale = Math.min(width * 0.85, height * 0.7) / 32;
+            for (let t = 0; t <= 2 * Math.PI; t += 0.01) {
+                const x = 16 * Math.pow(Math.sin(t), 3);
+                const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                heartPoints.push({ x: x * scale, y: y * scale });
+            }
+        }
+
+        let heartProgress = 0;
+        function animateHeart() {
+            heartCtx.clearRect(0, 0, width, height);
+            heartCtx.save();
+            heartCtx.translate(width/2, height/2);
+
+            let pulse = 1;
+            if (heartProgress >= 1) {
+                pulse = 1 + 0.025 * Math.sin(Date.now() / 500);
+                heartCtx.scale(pulse, pulse);
+                poemDisplay.style.transform = `scale(${pulse})`;
+            }
+
+            heartCtx.beginPath();
+            const count = Math.floor(heartPoints.length * Math.min(heartProgress, 1));
+            if (count > 0) {
+                heartCtx.moveTo(heartPoints[0].x, heartPoints[0].y);
+                for (let i = 1; i < count; i++) {
+                    heartCtx.lineTo(heartPoints[i].x, heartPoints[i].y);
+                }
+            }
+
+            heartCtx.strokeStyle = '#ff1a1a';
+            heartCtx.lineWidth = 3;
+            heartCtx.shadowColor = '#ff1a1a';
+            heartCtx.shadowBlur = 25;
+            heartCtx.stroke();
+            
+            heartCtx.fillStyle = 'rgba(255, 0, 0, 0.05)';
+            heartCtx.fill();
+            
+            heartCtx.restore();
+
+            if (heartProgress < 1) {
+                heartProgress += 0.007;
+                requestAnimationFrame(animateHeart);
+            } else {
+                requestAnimationFrame(animateHeart);
+            }
+        }
+
+        const poem = [
+            "In every heartbeat of this year,",
+            "I'll keep you close and hold you dear.",
+            "As 2026 starts to unfold,",
+            "A story of us is being told.",
+            "",
+            "With you, I find my home and rest,",
+            "Of all the years, this will be the best."
+        ].join('\n');
+
+        let charIdx = 0;
+        function type() {
+            if (charIdx < poem.length) {
+                if (poem[charIdx] === '\n') {
+                    poemDisplay.innerHTML += '<br>';
+                } else {
+                    poemDisplay.innerHTML += poem[charIdx];
+                }
+                charIdx++;
+                setTimeout(type, 70);
+            } else {
+                poemDisplay.innerHTML += '<span class="cursor"></span>';
+            }
+        }
+
+        function startApp() {
+            document.getElementById('start-overlay').style.opacity = '0';
+            const audio = document.getElementById("myAudio");
+            audio.play();
+            setTimeout(() => {
+                document.getElementById('start-overlay').style.display = 'none';
+                animateHeart();
+                setTimeout(type, 1200);
+            }, 1000);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        drawScene();
+        
+        // Get a reference to the audio element in the HTML
+        const sound = document.getElementById('mySound');
+
+       // Get a reference to the button element
+       const button = document.getElementById('playButton');
+
+     // Add an event listener to the button
+      button.addEventListener('click', function() {
+    // Check if the audio is currently playing and reset it to the beginning
+      
+});
+
+        
+    </script>
+</body>
+</html>
