@@ -301,11 +301,7 @@
             heartCtx = heartCanvas.getContext('2d');
 
             // Force loop fix for video
-            const video = document.getElementById('bg-video');
-            video.addEventListener('ended', () => {
-                video.currentTime = 0;
-                video.play();
-            }, false);
+            
             
             window.addEventListener('resize', resize);
             resize();
