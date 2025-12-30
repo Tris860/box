@@ -7,19 +7,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,400;1,700&family=Great+Vibes&family=Alice&display=swap');
-
         :root {
             --gold: #d4af37;
             --night-black: #000000;
         }
-
         .green {
             color: limegreen;
             text-decoration: none;
             font-style: italic;
             font-weight: bold;
         }
-
         body, html {
             margin: 0;
             padding: 0;
@@ -222,7 +219,7 @@
     <div id="start-overlay">
         <audio src="media/myaudio.mp3" id="myAudio" loop></audio>
         <button class="btn-start" onclick="startApp()">Click to View</button>
-        <h3 class="mt-4">Developed by <a href="https://tristechhub.org.rw" class="green">Tris Tech Hub</a></h3>
+        <!-- <h3 class="mt-4">Developed by <a href="https://tristechhub.org.rw" class="green">Tris Tech Hub</a></h3> -->
     </div>
 
     <canvas id="canvas-bg"></canvas>
@@ -291,7 +288,7 @@
             "",
             "Happy New Year, my love.",
             "I’m here. I’m yours. And I’m not going anywhere.",
-            "I love you to the stars and beyond 🫂🤍✨"
+            "I love you to the stars and beyond 🫂 🤍✨"
         ].join('\n');
 
         function init() {
@@ -301,7 +298,6 @@
             heartCtx = heartCanvas.getContext('2d');
 
             // Force loop fix for video
-            
             
             window.addEventListener('resize', resize);
             resize();
